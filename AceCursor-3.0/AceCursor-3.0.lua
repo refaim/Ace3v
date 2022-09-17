@@ -1,4 +1,4 @@
-local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 1
+local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 2
 local AceCursor, oldminor = LibStub:NewLibrary(ACECURSOR_MAJOR, ACECURSOR_MINOR)
 
 if not AceCursor then return end -- No upgrade needed
@@ -111,8 +111,8 @@ if not _G.AceCore_PickupAction then
 end
 
 function _G.AceCore_PickupAction(slot)
-	cursorType = nil
-	cursorData = nil
+	cursorType = "action"
+	cursorData = slot
 	cursorSubType = nil
 	cursorSubData = nil
 end
