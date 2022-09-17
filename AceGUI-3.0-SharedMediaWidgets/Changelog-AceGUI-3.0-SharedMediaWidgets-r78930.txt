@@ -1,0 +1,17 @@
+------------------------------------------------------------------------
+r78930 | yssaril | 2008-07-22 13:42:23 -0400 (Tue, 22 Jul 2008) | 2 lines
+Changed paths:
+   M /trunk/AceGUI-3.0-SharedMediaWidgets/AceGUI-3.0-SharedMediaWidgets/AceGUI-3.0-SharedMediaWidgets.lua
+
+AceGUI-3.0-SharedMediaWidgets:
+- made the internal media lists available globally under AceGUIWidgetLSMlists.font, AceGUIWidgetLSMlists.sound, AceGUIWidgetLSMlists.statusbar, AceGUIWidgetLSMlists.border, and AceGUIWidgetLSMlists.background now you can just pull from those table directly in your Ace3 optiontree and don't have to generate and maintain your own local copy
+------------------------------------------------------------------------
+r78450 | yssaril | 2008-07-14 21:59:21 -0400 (Mon, 14 Jul 2008) | 3 lines
+Changed paths:
+   M /trunk/AceGUI-3.0-SharedMediaWidgets/AceGUI-3.0-SharedMediaWidgets/AceGUI-3.0-SharedMediaWidgets.lua
+   M /trunk/AceGUI-3.0-SharedMediaWidgets/AceGUI-3.0-SharedMediaWidgets.toc
+
+AceGUI-3.0-SharedMediaWidgets:
+- added Lib: ... to the toc
+- register for the LSM callback before fetching the initial lists
+------------------------------------------------------------------------

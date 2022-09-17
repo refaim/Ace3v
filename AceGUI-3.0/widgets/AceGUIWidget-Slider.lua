@@ -2,13 +2,13 @@
 Slider Widget
 Graphical Slider, like, for Range values.
 -------------------------------------------------------------------------------]]
-local Type, Version = "Slider", 21
+local Type, Version = "Slider", 22
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
 -- Lua APIs
 local min, max, floor = math.min, math.max, math.floor
-local tonumber, pairs = tonumber, pairs
+local tonumber, pairs, format = tonumber, pairs, string.format
 
 -- WoW APIs
 local PlaySound = PlaySound
@@ -24,7 +24,7 @@ Support functions
 local function UpdateText(self)
 	local value = self.value or 0
 	if self.ispercent then
-		self.editbox:SetText(("%s%%"):format(floor(value * 1000 + 0.5) / 10))
+		self.editbox:SetText(format(("%s%%"),floor(value * 1000 + 0.5) / 10))
 	else
 		self.editbox:SetText(floor(value * 100 + 0.5) / 100)
 	end
@@ -33,8 +33,8 @@ end
 local function UpdateLabels(self)
 	local min, max = (self.min or 0), (self.max or 100)
 	if self.ispercent then
-		self.lowtext:SetFormattedText("%s%%", (min * 100))
-		self.hightext:SetFormattedText("%s%%", (max * 100))
+		self.lowtext:SetText(format("%s%%", (min * 100)))
+		self.hightext:SetText(format("%s%%", (max * 100)))
 	else
 		self.lowtext:SetText(min)
 		self.hightext:SetText(max)

@@ -17,7 +17,7 @@
 -- @name AceTimer-3.0
 -- @release $Id: AceTimer-3.0.lua 1119 2014-10-14 17:23:29Z nevcairiel $
 
-local MAJOR, MINOR = "AceTimer-3.0", 17 -- Bump minor on changes
+local MAJOR, MINOR = "AceTimer-3.0", 18 -- Bump minor on changes
 local AceTimer, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceTimer then return end -- No upgrade needed
@@ -254,7 +254,7 @@ AceTimer.embeds = AceTimer.embeds or {}
 local mixins = {
 	"ScheduleTimer", "ScheduleRepeatingTimer",
 	"CancelTimer", "CancelAllTimers",
-	"TimeLeft"
+	"TimeLeft", "TimerStatus"
 }
 
 function AceTimer:Embed(target)
