@@ -1,4 +1,4 @@
-local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 2
+local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 3
 local AceCursor, oldminor = LibStub:NewLibrary(ACECURSOR_MAJOR, ACECURSOR_MINOR)
 
 if not AceCursor then return end -- No upgrade needed
@@ -6,6 +6,14 @@ if not AceCursor then return end -- No upgrade needed
 local AceCore = LibStub("AceCore-3.0")
 local _G = AceCore._G
 local hooksecurefunc = AceCore.hooksecurefunc
+
+local ttName = "AceCursorTT"
+local tt = CreateFrame("GameTooltip", ttName, nil, "GameTooltipTemplate")
+tt:SetOwner(WorldFrame,"ANCHOR_NONE")
+tt:SetScript("OnHide", function ()
+    this:SetOwner(WorldFrame,"ANCHOR_NONE")
+  end)
+AceCursor.tooltip = tt
 
 local cursorType, cursorData, cursorSubType, cursorSubData
 function _G.GetCursorInfo()
@@ -43,6 +51,34 @@ function _G.AceCore_PickupContainerItem(container, slot)
 	if CursorHasItem() then
 		return setcursoritem(GetContainerItemLink(container, slot))
 	end
+end
+
+-- PickupInventoryItem
+if not AceCore_PickupInventoryItem then
+	hooksecurefunc("PickupInventoryItem",
+		function(slot)
+			return _G.AceCore_PickupInventoryItem(slot)
+		end)
+end
+
+function _G.AceCore_PickupInventoryItem(slot)
+	if CursorHasItem() then
+		return setcursoritem(GetInventoryItemLink("player", slot))
+	else
+		cursorType, cursorData, cursorSubType, cursorSubData = nil,nil,nil,nil
+	end
+end
+
+-- EquipCursorItem
+if not _G.AceCore_EquipCursorItem then
+	hooksecurefunc("EquipCursorItem",
+		function(slot)
+			return _G.AceCore_EquipCursorItem(slot)
+		end)
+end
+
+function _G.AceCore_EquipCursorItem(slot)
+		cursorType, cursorData, cursorSubType, cursorSubData = nil,nil,nil,nil
 end
 
 -- PickupBagFromSlot
@@ -111,10 +147,10 @@ if not _G.AceCore_PickupAction then
 end
 
 function _G.AceCore_PickupAction(slot)
-	cursorType = "action"
-	cursorData = slot
-	cursorSubType = nil
-	cursorSubData = nil
+	-- cursorType = "action"
+	-- cursorData = slot
+	-- cursorSubType = nil
+	-- cursorSubData = nil
 end
 
 -- PlaceAction
@@ -129,21 +165,36 @@ function _G.AceCore_PlaceAction(slot)
 	cursorType, cursorData, cursorSubType, cursorSubData = nil,nil,nil,nil
 end
 
+local function setcursoraction(id)
+	AceCursor.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+	AceCursor.tooltip:ClearLines()
+	AceCursor.tooltip:SetAction(id)
+	cursorType = "action"
+	cursorData = getglobal(ttName .."TextLeft1"):GetText()
+	AceCursor.tooltip:Hide()
+	cursorSubType = GetActionTexture(id)
+	cursorSubData = id
+end
+
 local function ActionButton_OnClick()
+	local id = ActionButton_GetPagedID(this)
 	if ( IsShiftKeyDown() ) then
-		PickupAction(ActionButton_GetPagedID(this));
+		setcursoraction(id)
+		PickupAction(id)
 	else
 		if ( MacroFrame_SaveMacro ) then
 			MacroFrame_SaveMacro();
 		end
-		UseAction(ActionButton_GetPagedID(this), 1);
+		UseAction(id, 1);
 	end
 	ActionButton_UpdateState();
 end
 
 local function ActionButton_OnDragStart()
 	if ( LOCK_ACTIONBAR ~= "1" ) then
-		PickupAction(ActionButton_GetPagedID(this));
+		local id = ActionButton_GetPagedID(this)
+		setcursoraction(id)
+		PickupAction(id);
 		ActionButton_UpdateHotkeys(this.buttonType);
 		ActionButton_UpdateState();
 		ActionButton_UpdateFlash();
