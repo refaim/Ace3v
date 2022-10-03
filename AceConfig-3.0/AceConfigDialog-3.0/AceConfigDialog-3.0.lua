@@ -4,7 +4,7 @@
 -- @release $Id: AceConfigDialog-3.0.lua 1139 2016-07-03 07:43:51Z nevcairiel $
 
 local LibStub = LibStub
-local MAJOR, MINOR = "AceConfigDialog-3.0", 62
+local MAJOR, MINOR = "AceConfigDialog-3.0", 63
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -1743,13 +1743,13 @@ end
 
 -- Upgrade the OnUpdate script as well, if needed.
 if AceConfigDialog.frame:GetScript("OnUpdate") then
-	AceConfigDialog.frame:SetScript("OnUpdate", RefreshOnUpdate)
+	AceConfigDialog.frame:SetScript("OnUpdate", function() RefreshOnUpdate(this) end)
 end
 
 --- Close all open options windows
 function AceConfigDialog:CloseAll()
 	AceConfigDialog.frame.closeAll = true
-	AceConfigDialog.frame:SetScript("OnUpdate", RefreshOnUpdate)
+	AceConfigDialog.frame:SetScript("OnUpdate", function() RefreshOnUpdate(this) end)
 	if next(self.OpenFrames) then
 		return true
 	end
@@ -1760,7 +1760,7 @@ end
 function AceConfigDialog:Close(appName)
 	if self.OpenFrames[appName] then
 		AceConfigDialog.frame.closing[appName] = true
-		AceConfigDialog.frame:SetScript("OnUpdate", RefreshOnUpdate)
+		AceConfigDialog.frame:SetScript("OnUpdate", function() RefreshOnUpdate(this) end)
 		return true
 	end
 end
@@ -1768,7 +1768,7 @@ end
 -- Internal -- Called by AceConfigRegistry
 function AceConfigDialog:ConfigTableChanged(event, appName)
 	AceConfigDialog.frame.apps[appName] = true
-	AceConfigDialog.frame:SetScript("OnUpdate", RefreshOnUpdate)
+	AceConfigDialog.frame:SetScript("OnUpdate", function() RefreshOnUpdate(this) end)
 end
 
 reg.RegisterCallback(AceConfigDialog, "ConfigTableChange", "ConfigTableChanged")
@@ -1901,7 +1901,7 @@ end
 local function ClearBlizPanel(widget, event)
 	local appName = widget:GetUserData("appName")
 	AceConfigDialog.frame.closing[appName] = true
-	AceConfigDialog.frame:SetScript("OnUpdate", RefreshOnUpdate)
+	AceConfigDialog.frame:SetScript("OnUpdate", function() RefreshOnUpdate(this) end)
 end
 
 --- Add an option table into the Blizzard Interface Options panel.
