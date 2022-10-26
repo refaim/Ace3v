@@ -51,7 +51,7 @@ local function Constructor()
 
 	--Container Support
 	local content = CreateFrame("Frame", nil, frame)
-	content:SetPoint("TOPLEFT", 0,0)
+	content:SetPoint("TOPLEFT",0,0)
 	content:SetPoint("BOTTOMRIGHT",0,0)
 
 	local widget = {
