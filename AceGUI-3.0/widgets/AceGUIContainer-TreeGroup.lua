@@ -2,7 +2,7 @@
 TreeGroup Container
 Container that uses a tree control to switch between groups.
 -------------------------------------------------------------------------------]]
-local Type, Version = "TreeGroup", 40
+local Type, Version = "TreeGroup", 41
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -185,7 +185,7 @@ function BuildUniqueValue(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
 	args[8] = a8
 	args[9] = a9
 	args[10] = a10
-	return tconcat(tmp, "\001", 1, tgetn(args))
+	return tconcat(args, "\001", 1, tgetn(args))
 end
 end
 
