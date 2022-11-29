@@ -1,4 +1,4 @@
-local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 3
+local ACECURSOR_MAJOR, ACECURSOR_MINOR = "AceCursor-3.0", 4
 local AceCursor, oldminor = LibStub:NewLibrary(ACECURSOR_MAJOR, ACECURSOR_MINOR)
 
 if not AceCursor then return end -- No upgrade needed
@@ -176,6 +176,18 @@ local function setcursoraction(id)
 	cursorSubData = id
 end
 
+local function setcursorpetaction(id)
+	AceCursor.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+	AceCursor.tooltip:ClearLines()
+	AceCursor.tooltip:SetPetAction(id)
+	cursorType = "petaction"
+	cursorData = getglobal(ttName .."TextLeft1"):GetText()
+	AceCursor.tooltip:Hide()
+	local name, subtext, texture, isToken, isActive, autoCastAllowed, autoCastEnabled = GetPetActionInfo(id);
+	cursorSubType = texture
+	cursorSubData = id
+end
+
 local function ActionButton_OnClick()
 	local id = ActionButton_GetPagedID(this)
 	if ( IsShiftKeyDown() ) then
@@ -227,9 +239,47 @@ for _,btn in actionButtons do
 		frame:SetScript("OnClick",ActionButton_OnClick)
 	end
 end
+
+local function PetActionButton_OnClick()
+	this:SetChecked(0);
+	local id = this:GetID()
+	if ( IsShiftKeyDown() ) then
+		setcursorpetaction(id)
+		PickupPetAction(id)
+	else
+		if ( arg1 == "LeftButton" ) then
+			if ( IsPetAttackActive(id) ) then
+				PetStopAttack();
+			else
+				CastPetAction(id);
+			end
+		else
+			TogglePetAutocast(id);
+		end
+	end
+end
+
+local function PetActionButton_OnDragStart()
+	if ( LOCK_ACTIONBAR ~= "1" ) then
+		local id = this:GetID()
+		setcursorpetaction(id)
+		this:SetChecked(0);
+		PickupPetAction(id);
+		PetActionBar_Update();
+	end
+end
+
+local function PetActionButton_OnReceiveDrag()
+	if ( LOCK_ACTIONBAR ~= "1" ) then
+		this:SetChecked(0);
+		PickupPetAction(this:GetID());
+		PetActionBar_Update();
+	end
+end
+
 for i=1,10 do
 	local frame = _G["PetActionButton"..i]
-	frame:SetScript("OnDragStart",ActionButton_OnDragStart)
-	frame:SetScript("OnReceiveDrag",ActionButton_OnReceiveDrag)
-	frame:SetScript("OnClick",ActionButton_OnClick)
+	frame:SetScript("OnDragStart",PetActionButton_OnDragStart)
+	frame:SetScript("OnReceiveDrag",PetActionButton_OnReceiveDrag)
+	frame:SetScript("OnClick",PetActionButton_OnClick)
 end
