@@ -27,7 +27,6 @@ do
 		local self = this.obj
 		self:Fire("OnValueChanged", 1, this.text:GetText())
 		self:SetValue(this.text:GetText())
-		--printT(this.text:GetText())
 		if self.dropdown then
 			self.dropdown = AGSMW:ReturnDropDownFrame(self.dropdown)
 		end
@@ -36,7 +35,6 @@ do
 	local function ContentSpeakerOnClick(button)
 		local self = this.frame.obj
 		local sound = this.frame.text:GetText()
-		--printT({"ContentSpeakerOnClick",sound})
 		PlaySoundFile(self.list[sound] ~= sound and self.list[sound] or Media:Fetch('sound', sound), "Master")
 	end
 
@@ -218,7 +216,6 @@ do
 		
 		local self = this.obj
 		local sound = self.frame.text:GetText()
-		--printT({"WidgetPlaySound", sound})
 		PlaySoundFile(self.list[sound] ~= sound and self.list[sound] or Media:Fetch('sound', sound), "Master")
 	end
 

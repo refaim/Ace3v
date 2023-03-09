@@ -1,4 +1,4 @@
-local ACECORE_MAJOR, ACECORE_MINOR = "AceCore-3.0", 1
+local ACECORE_MAJOR, ACECORE_MINOR = "AceCore-3.0", 2
 local AceCore, oldminor = LibStub:NewLibrary(ACECORE_MAJOR, ACECORE_MINOR)
 
 if not AceCore then return end -- No upgrade needed
@@ -28,6 +28,10 @@ function del(t)
 	end
 	tsetn(t,0)
 	list[t] = true
+end
+
+print = print or function(text)
+	DEFAULT_CHAT_FRAME:AddMessage(text)
 end
 
 -- debug
