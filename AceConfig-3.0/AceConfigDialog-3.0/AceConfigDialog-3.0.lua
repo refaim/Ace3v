@@ -4,7 +4,7 @@
 -- @release $Id: AceConfigDialog-3.0.lua 1139 2016-07-03 07:43:51Z nevcairiel $
 
 local LibStub = LibStub
-local MAJOR, MINOR = "AceConfigDialog-3.0", 65
+local MAJOR, MINOR = "AceConfigDialog-3.0", 70
 local AceConfigDialog, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 
 if not AceConfigDialog then return end
@@ -1928,6 +1928,7 @@ end
 -- @return The reference to the frame registered into the Interface Options.
 function AceConfigDialog:AddToBlizOptions(appName, name, parent, ...)
 	local BlizOptions = AceConfigDialog.BlizOptions
+	if not BlizOptions.tree then BlizOptions.tree = {} end
 
 	local key = appName
 	local l = tgetn(arg)
@@ -1962,11 +1963,11 @@ function AceConfigDialog:AddToBlizOptions(appName, name, parent, ...)
 	end
 end
 
-do
-	local tree = {}
+
 	function InterfaceOptions_AddCategory(widget, addon, position)
 		local parent = widget.frame.parent;
 		local appName = widget:GetUserData("appName")
+	local tree = AceConfigDialog.BlizOptions.tree
 		if (parent) then
 			for k, v in pairs(tree) do
 				if (v.value == parent) then
@@ -2025,6 +2026,7 @@ do
 	_G["AddonConfigFrame"] = _G["AddonConfigFrame"] or nil
 	local frame
 	function InterfaceOptionsFrame_OpenToCategory(...)
+	local tree = AceConfigDialog.BlizOptions.tree
 		-- Create the frame container
 		frame = _G["AddonConfigFrame"] or gui:Create("Frame")
 		_G["AddonConfigFrame"] = frame
@@ -2052,9 +2054,8 @@ do
 			for n = 1, l do
 				tinsert(path, arg[n])
 			end
-			tg:SelectByPath(unpack(arg))
+		tg:SelectByPath(unpack(path))
 		end
 		del(path)
 	end
 
-end
