@@ -2,7 +2,7 @@
 ScrollFrame Container
 Plain container that scrolls its content and doesn't grow in height.
 -------------------------------------------------------------------------------]]
-local Type, Version = "ScrollFrame", 24
+local Type, Version = "ScrollFrame", 25
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -37,6 +37,7 @@ end
 
 local function ScrollBar_OnScrollValueChanged()
 	this.obj:SetScroll(arg1)
+	this.obj:UpdateScrollButtonsState()
 end
 
 --[[-----------------------------------------------------------------------------
@@ -77,6 +78,26 @@ local methods = {
 		status.scrollvalue = value
 	end,
 
+	["UpdateScrollButtonsState"] = function(self)
+		local upbutton = getglobal(self.scrollbar:GetName() .. "ScrollUpButton")
+		local downbutton = getglobal(self.scrollbar:GetName() .. "ScrollDownButton")
+
+		local value = self.scrollbar:GetValue()
+		local minvalue, maxvalue = self.scrollbar:GetMinMaxValues()
+
+		if value == minvalue then
+			upbutton:Disable()
+		else
+			upbutton:Enable()
+		end
+
+		if value == maxvalue then
+			downbutton:Disable()
+		else
+			downbutton:Enable()
+		end
+	end,
+
 	["MoveScroll"] = function(self, value)
 		local status = self.status or self.localstatus
 		local height, viewheight = self.scrollframe:GetHeight(), self.content:GetHeight()
@@ -115,6 +136,7 @@ local methods = {
 		else
 			if not self.scrollBarShown then
 				self.scrollBarShown = true
+				self:UpdateScrollButtonsState()
 				scrollbar:Show()
 				scrollframe:SetPoint("BOTTOMRIGHT", -20, 0)
 				self:DoLayout()
